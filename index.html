@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Joke Generator</title>
+</head>
+<body>
+    <div style="width: 50%; margin: auto; text-align: center; border: 2px solid #333; padding: 20px; border-radius: 10px;">
+        <h1 style="font-family: Arial, sans-serif; color: #333;">Random Joke Generator</h1>
+        
+        <p id="jokeDisplay" style="font-family: Arial, sans-serif; font-size: 18px; color: #555;  padding: 10px; border-radius: 5px;"></p>
+        
+        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+            <button onclick="fetchData()" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: red;">Get Joke</button>
+            <button onclick="clearJoke()" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: green;">Clear Joke</button>
+        </div>
+        
+        <!--  -->
+        <p id="charCount" style="font-family: Arial, sans-serif; font-size: 14px; color: #777;"></p>
+    </div>
+
+    <script>
+        async function fetchData() {
+            try {
+                let response = await fetch("https://v2.jokeapi.dev/joke/Any");
+                let data = await response.json();
+                
+                let jokeDisplay = document.getElementById("jokeDisplay");
+                let charCountDisplay = document.getElementById("charCount");
+                let jokeText = "";
+                
+                if (data.type === "single") {
+                    jokeText = data.joke;
+                } else if (data.type === "twopart") {
+                    jokeText = data.setup + " - " + data.delivery;
+                }
+                
+                jokeDisplay.textContent = jokeText;
+                charCountDisplay.textContent = "Character count: " + jokeText.length;
+            } catch (error) {
+                console.log("Error fetching joke:", error);
+            }
+        }
+
+        function clearJoke() {
+            document.getElementById("jokeDisplay").textContent = "";
+            document.getElementById("charCount").textContent = "";
+        }
+    </script>
+</body>
+</html>
